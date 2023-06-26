@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  
+
+<h2 class="text-center alert_heading text-uppercase my-5">provide the details</h2>
+
+
+        <div class="container">
+            <div class="row form-group">
+                <div class="col-12">
+                    <form action="{% url 'alert' %}" method="post" class="row ">
+                        {% csrf_token %}
+                        <div class="mb-5 ">
+                          <p class="text-white fw-bold">Choose the Problem</p>
+                            <select class="form-select" name="problem" id="problem_list">
+                                <option selected>Select</option>
+                               {% for p in problem %}
+                                <option value="p.id">{{p.type}}</option>
+                               {% endfor %}
+                         </select>
+                        </div>
+
+                        
+                        <div class="mb-3">
+                            <p class="text-white fw-bold">Location</p>
+                          </div>
+                        <div class="mb-3 col form-group">
+                            <!-- <input type="hidden" id="latitude" name="latitude"/>
+                            <input type="hidden" id="longitude" name="longitude"/> -->
+                         
+                            
+
+                          <button type="button"  class="btn alert-btn px-5 text-white mb-3 form-control" name="location"  data-bs-toggle="modal" data-bs-target="#locationModal">Choose on a Map</button>
+                        </div>
+                        <div class="mb-3 col form-group">
+                            <input type="text"   class="form-control" name="address">
+                          </div>
+
+                          <div class="mb-3">
+                            <p class="text-white fw-bold">Uplaod the Photo</p>
+                          </div>
+                          <div class="mb-3" id="selectedBanner">
+
+                          </div>
+
+                          <div class="mb-5">
+                            <input type="file" id="img" name="image" class="form-control">
+                          </div>
+
+                          <div class="mb-4 col ">
+                            <button type ="submit" class="btn btn-primary form-control fw-bold fs-4 " name="alert" style="background-color: #A5A6F6; border-color :transparent;">Alert</button>
+                          </div>
+
+                          <div class="mb-4 col ">
+                            <button type ="cancel" class="btn btn-danger form-control fw-bold fs-4" style="background-color: #A5A6F6; border-color :transparent; color:red">Cancel</button>
+                          </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+       
+
+        <!-- modal -->
+        <div class="modal fade" id="locationModal" tabindex="-1" aria-labelledby="locationModal" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="locationModal">Modal title</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  ...
+                </div>
+                <div class="modal-footer">
+                  
+                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- script  -->
+          <script>
+            var selDiv = "";
+            var storedFiles = [];
+            $(document).ready(function () {
+              $("#img").on("change", handleFileSelect);
+              selDiv = $("#selectedBanner");
+            });
+      
+            function handleFileSelect(e) {
+              var files = e.target.files;
+              var filesArr = Array.prototype.slice.call(files);
+              filesArr.forEach(function (f) {
+                if (!f.type.match("image.*")) {
+                  return;
+                }
+                storedFiles.push(f);
+      
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                  var html =
+                    '<img src="' +
+                    e.target.result +
+                    "\" data-file='" +
+                    f.name +
+                    "alt='Category Image' height='300px' width='400px'>";
+                  selDiv.html(html);
+                };
+                reader.readAsDataURL(f);
+              });
+            }
+          </script>
+         
+         
+{% endblock %}
